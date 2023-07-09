@@ -1,0 +1,7 @@
+{% extends "_base.html" %}
+{% block content %}
+<h1>{{post.description}}</h1>
+{% if post.image %}
+<img src="{{post.image.url}}" alt="BROLY EN TANGA">
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<a href="{% url 'create_post' %}">Create new post</a>
+
+{% for post in posts %}
+	<h1><a href="{% url 'post_detail' post.pk %}">{{post.header}}</a></h1>
+	<p>{{post.description}}</p>
+	<a href="{% url 'create_repost' post.id %}">Repost</a>
+	<a href="{% url 'update_post' post.pk %}">Edit</a>
+	<form method="POST" action="{% url 'like' post.pk %}">
+		{% csrf_token %}
+		<h1>{{post.likes}}</h1><input type="submit" value="Like">
+	</form>
+	<form method="POST" action="{% url 'dislike' post.pk %}">
+		{% csrf_token %}
+		<h1>{{post.dislikes}}</h1><input type="submit" value="Dislike">
+	</form>
+	<a href="{% url 'create_comment' post.pk %}">Comment</a>
+	<div class="comments">
+		<ul>
+			{% for comment in post.comments.all %}
+				{% if comment.comment_parent == None %}
+					<li>{{comment.text}}
+					<a href="{% url 'create_answer' comment.id %}">Answer</a></li>
+					{% if comment.comment_child %}
+					<ul style="background:red;">
+						{% for answer in comment.comment_child.all %}
+							<li>{{answer.text}}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+
+		</ul>
+	</div>
+{% endfor %}
+
+
+{% endblock content %}
